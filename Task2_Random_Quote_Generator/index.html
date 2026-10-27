@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Random Quote Generator | CodeAlpha</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="app">
+    <div class="top-label"><span class="sparkle">✦</span> DAILY INSPIRATION</div>
+    <h1>A little reminder<br><span>for your journey.</span></h1>
+    <p class="intro">Take a breath, find a little wisdom, and keep moving forward.</p>
+
+    <section class="quote-card" aria-live="polite">
+      <div class="quote-mark">“</div>
+      <p id="quoteText" class="quote-text">Believe you can and you're halfway there.</p>
+      <p id="quoteAuthor" class="quote-author">— Theodore Roosevelt</p>
+      <div class="card-line"></div>
+      <div class="card-footer">
+        <span id="quoteCount">A MOMENT OF INSPIRATION</span>
+        <button id="copyBtn" class="icon-btn" type="button" aria-label="Copy quote" title="Copy quote">⧉</button>
+      </div>
+    </section>
+
+    <button id="newQuoteBtn" class="primary-btn" type="button">✦ &nbsp; New Quote</button>
+    <p id="status" class="status" role="status"></p>
+    <p class="footer-note">Made with care · CodeAlpha App Development</p>
+  </main>
+  <script src="script.js"></script>
+</body>
+</html>

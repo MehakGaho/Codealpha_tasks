@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Daily Fitness Tracker | CodeAlpha</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="brand"><span class="brand-icon">✚</span> FitTrack</div>
+      <p class="side-caption">YOUR WELLNESS SPACE</p>
+      <div class="side-link active">▦ &nbsp; Dashboard</div>
+      <div class="side-link">◷ &nbsp; Daily Activity</div>
+      <div class="side-link">♡ &nbsp; Your Progress</div>
+      <div class="sidebar-bottom">
+        <div class="mini-circle">✦</div>
+        <p>Small steps every day lead to big changes.</p>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <header class="header">
+        <div><p class="eyebrow">YOUR DAILY OVERVIEW</p><h1>Fitness Dashboard</h1><p class="subtitle">Build healthy habits, one day at a time.</p></div>
+        <div class="date-pill" id="todayDate">Today</div>
+      </header>
+
+      <section class="stats-grid">
+        <article class="stat-card steps"><div class="stat-top"><span>Steps</span><span class="stat-icon">↗</span></div><strong id="stepsValue">0</strong><small>of 8,000 daily goal</small><div class="progress"><span id="stepsProgress"></span></div></article>
+        <article class="stat-card calories"><div class="stat-top"><span>Calories burned</span><span class="stat-icon">♨</span></div><strong id="caloriesValue">0</strong><small>of 500 kcal daily goal</small><div class="progress"><span id="caloriesProgress"></span></div></article>
+        <article class="stat-card workouts"><div class="stat-top"><span>Workout minutes</span><span class="stat-icon">◷</span></div><strong id="minutesValue">0</strong><small>of 30 min daily goal</small><div class="progress"><span id="minutesProgress"></span></div></article>
+      </section>
+
+      <section class="content-grid">
+        <article class="panel activity-panel">
+          <div class="panel-heading"><div><h2>Log an activity</h2><p>Add your activity for today.</p></div><span class="heading-icon">＋</span></div>
+          <form id="activityForm">
+            <label for="activityType">Activity type</label>
+            <select id="activityType" required>
+              <option value="Walking">Walking</option><option value="Running">Running</option><option value="Cycling">Cycling</option><option value="Workout">Workout</option><option value="Yoga">Yoga</option><option value="Other">Other</option>
+            </select>
+            <div class="form-row">
+              <div><label for="activityMinutes">Duration (min)</label><input id="activityMinutes" type="number" min="1" max="600" placeholder="30" required></div>
+              <div><label for="activityCalories">Calories (kcal)</label><input id="activityCalories" type="number" min="0" max="10000" placeholder="150" required></div>
+            </div>
+            <div><label for="activitySteps">Steps (optional)</label><input id="activitySteps" type="number" min="0" max="100000" placeholder="e.g. 2500"></div>
+            <button class="primary-btn" type="submit">＋ &nbsp; Add Activity</button>
+            <p id="formMessage" class="form-message" role="status"></p>
+          </form>
+        </article>
+
+        <article class="panel summary-panel">
+          <div class="panel-heading"><div><h2>Today's progress</h2><p>Your activity at a glance.</p></div><span class="heading-icon">◉</span></div>
+          <div class="ring-wrap"><div class="progress-ring" id="progressRing"><div class="ring-inner"><strong id="goalPercent">0%</strong><span>daily goals</span></div></div></div>
+          <div class="goal-list"><div><span class="goal-dot dot-one"></span>Steps goal <strong id="stepsGoalText">0%</strong></div><div><span class="goal-dot dot-two"></span>Calories goal <strong id="caloriesGoalText">0%</strong></div><div><span class="goal-dot dot-three"></span>Workout goal <strong id="minutesGoalText">0%</strong></div></div>
+        </article>
+      </section>
+
+      <section class="panel history-panel">
+        <div class="panel-heading"><div><h2>Activity history</h2><p>Your entries are saved on this device.</p></div><button id="clearBtn" class="text-btn" type="button">Clear history</button></div>
+        <div class="table-wrap"><table><thead><tr><th>Activity</th><th>Duration</th><th>Calories</th><th>Steps</th><th></th></tr></thead><tbody id="activityList"></tbody></table></div>
+        <p id="emptyState" class="empty-state">No activities logged yet. Add your first activity above!</p>
+      </section>
+      <footer>Stay consistent. Your progress matters. <span>CodeAlpha · App Development Task 3</span></footer>
+    </main>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>

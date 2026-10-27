@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Flashcard Quiz App | CodeAlpha</title>
+  <script src="script.js" defer></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+    :root {
+      --bg: #0b1020;
+      --panel: #141b30;
+      --card: #19233b;
+      --purple: #9b87ff;
+      --text: #f4f5ff;
+      --muted: #9ca7c1;
+      --border: #293450;
+      --green: #67e8b1;
+      --red: #ff8194;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      line-height: 1.6;
+    }
+
+    button, textarea { font: inherit; }
+    button { cursor: pointer; transition: 0.2s ease; }
+    button:focus-visible, textarea:focus-visible {
+      outline: 2px solid var(--purple);
+      outline-offset: 3px;
+    }
+
+    .topbar {
+      height: 76px;
+      padding: 0 8%;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      font-size: 23px;
+      font-weight: 800;
+      color: var(--text);
+      text-decoration: none;
+      letter-spacing: -1px;
+    }
+    .logo span { color: var(--purple); }
+
+    .project-label, .eyebrow {
+      color: var(--purple);
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 2px;
+    }
+
+    .project-label {
+      border: 1px solid var(--border);
+      border-radius: 30px;
+      padding: 7px 12px;
+    }
+
+    .container { width: min(900px, 90%); margin: auto; }
+
+    .intro { text-align: center; padding: 65px 0 35px; }
+    .intro h1 {
+      font-size: clamp(36px, 6vw, 58px);
+      line-height: 1.15;
+      letter-spacing: -2px;
+      margin: 15px 0;
+    }
+    .intro h1 span { color: var(--purple); }
+
+    .subtitle {
+      color: var(--muted);
+      max-width: 480px;
+      margin: auto;
+      font-size: 14px;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 55px;
+    }
+
+    .stat-card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 20px 24px;
+    }
+    .stat-card span { display: block; color: var(--muted); font-size: 13px; }
+    .stat-card strong { display: block; font-size: 28px; margin-top: 5px; }
+
+    .study-section, .manage-section { margin-bottom: 60px; }
+
+    .section-heading {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+    .section-heading h2 { font-size: 24px; margin-top: 4px; }
+
+    .btn {
+      border: 0;
+      border-radius: 9px;
+      padding: 11px 17px;
+      font-weight: 700;
+      font-size: 13px;
+    }
+    .btn:hover:not(:disabled) { transform: translateY(-2px); filter: brightness(1.1); }
+    .btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+    .btn-primary { background: var(--purple); color: #101025; }
+    .btn-secondary {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      color: var(--text);
+    }
+
+    .progress-track {
+      width: 100%;
+      height: 5px;
+      background: var(--border);
+      border-radius: 20px;
+      margin-bottom: 16px;
+      overflow: hidden;
+    }
+    #progressBar {
+      height: 100%;
+      width: 0;
+      background: var(--purple);
+      transition: width 0.3s ease;
+    }
+
+    .flashcard {
+      background: radial-gradient(circle at top right, #302858 0%, transparent 45%), var(--card);
+      border: 1px solid #35345b;
+      border-radius: 20px;
+      min-height: 320px;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .card-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: var(--muted);
+      font-size: 12px;
+    }
+    .card-badge {
+      color: var(--purple);
+      border: 1px solid #51467f;
+      padding: 5px 10px;
+      border-radius: 20px;
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 1px;
+    }
+
+    .card-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 30px 5px;
+      text-align: center;
+    }
+    #cardLabel, .answer-label {
+      color: var(--purple);
+      font-size: 11px;
+      letter-spacing: 2px;
+      font-weight: 800;
+      margin-bottom: 12px;
+    }
+    .card-content h3 {
+      font-size: clamp(21px, 4vw, 30px);
+      line-height: 1.5;
+      overflow-wrap: anywhere;
+    }
+    .answer-area { margin-top: 22px; }
+    .answer-divider {
+      width: 50px;
+      height: 2px;
+      background: var(--purple);
+      margin: 0 auto 20px;
+    }
+    #answer {
+      color: #e2e5f5;
+      overflow-wrap: anywhere;
+      white-space: pre-wrap;
+    }
+    .btn-answer {
+      width: 100%;
+      background: var(--purple);
+      color: #101025;
+      padding: 14px;
+    }
+
+    .navigation {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      margin: 18px 0;
+    }
+    .navigation span { color: var(--muted); font-size: 12px; text-align: center; }
+
+    .card-actions { display: flex; justify-content: center; gap: 12px; }
+    .btn-edit {
+      color: var(--purple);
+      background: #201d3d;
+      border: 1px solid #403763;
+    }
+    .btn-delete {
+      color: var(--red);
+      background: #301d30;
+      border: 1px solid #503047;
+    }
+
+    .card-form {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 15px;
+      padding: 24px;
+    }
+    .card-form h3 { margin-bottom: 20px; font-size: 18px; }
+    .card-form label {
+      display: block;
+      color: var(--muted);
+      font-size: 13px;
+      margin: 15px 0 7px;
+    }
+    .card-form textarea {
+      width: 100%;
+      min-height: 90px;
+      resize: vertical;
+      padding: 13px;
+      border-radius: 9px;
+      border: 1px solid var(--border);
+      background: var(--bg);
+      color: var(--text);
+      outline: none;
+    }
+    .card-form textarea:focus { border-color: var(--purple); }
+    .card-form textarea::placeholder { color: #68738e; }
+    .form-actions { display: flex; gap: 10px; margin-top: 18px; }
+    #formMessage { color: var(--green); font-size: 13px; margin-top: 12px; }
+
+    .card-list { display: grid; gap: 12px; margin-top: 20px; }
+    .list-card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 15px;
+    }
+    .list-card p { overflow-wrap: anywhere; }
+    .list-card .list-question { font-weight: 600; }
+    .list-card .list-answer { color: var(--muted); font-size: 13px; margin-top: 4px; }
+    .list-actions { display: flex; gap: 8px; flex-shrink: 0; }
+    .list-actions button {
+      padding: 7px 10px;
+      border-radius: 7px;
+      border: 1px solid var(--border);
+      background: var(--bg);
+      color: var(--text);
+      font-size: 12px;
+    }
+    .empty-list {
+      padding: 20px;
+      color: var(--muted);
+      text-align: center;
+      border: 1px dashed var(--border);
+      border-radius: 12px;
+    }
+
+    footer {
+      border-top: 1px solid var(--border);
+      text-align: center;
+      color: var(--muted);
+      padding: 25px 15px;
+      font-size: 12px;
+    }
+
+    @media (max-width: 600px) {
+      .topbar { padding: 0 5%; height: 66px; }
+      .logo { font-size: 20px; }
+      .project-label { font-size: 8px; letter-spacing: 1px; padding: 6px 8px; }
+      .container { width: 92%; }
+      .intro { padding-top: 45px; }
+      .stats { gap: 10px; margin-bottom: 40px; }
+      .stat-card { padding: 15px; }
+      .stat-card span { font-size: 11px; }
+      .stat-card strong { font-size: 24px; }
+      .section-heading h2 { font-size: 20px; }
+      .btn { padding: 10px 12px; font-size: 12px; }
+      .flashcard { min-height: 300px; padding: 18px; }
+      .navigation { gap: 6px; }
+      .navigation span { font-size: 10px; }
+      .card-form { padding: 17px; }
+      .list-card { align-items: flex-start; }
+      .list-actions { flex-direction: column; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { transition-duration: 0.01ms !important; }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <a href="#" class="logo">Flash<span>Learn.</span></a>
+    <span class="project-label">CODEALPHA PROJECT</span>
+  </header>
+
+  <main class="container">
+    <section class="intro">
+      <p class="eyebrow">YOUR PERSONAL STUDY SPACE</p>
+      <h1>Learn smarter.<br><span>Remember more.</span></h1>
+      <p class="subtitle">Create flashcards, test your knowledge, and learn at your own pace.</p>
+    </section>
+
+    <section class="stats">
+      <div class="stat-card">
+        <span>Total Flashcards</span>
+        <strong id="totalCards">0</strong>
+      </div>
+      <div class="stat-card">
+        <span>Current Card</span>
+        <strong id="currentCard">0 / 0</strong>
+      </div>
+    </section>
+
+    <section class="study-section">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">STUDY SESSION</p>
+          <h2>My Flashcards</h2>
+        </div>
+        <button class="btn btn-primary" id="addBtn">+ Add Card</button>
+      </div>
+
+      <div class="progress-track"><div id="progressBar"></div></div>
+
+      <div class="flashcard" id="flashcard">
+        <div class="card-top">
+          <span class="card-badge">STUDY CARD</span>
+          <span id="cardNumber">01</span>
+        </div>
+        <div class="card-content">
+          <p id="cardLabel">YOUR QUESTION</p>
+          <h3 id="question">Loading question...</h3>
+          <div id="answerArea" class="answer-area" hidden>
+            <div class="answer-divider"></div>
+            <p class="answer-label">ANSWER</p>
+            <p id="answer"></p>
+          </div>
+        </div>
+        <button class="btn btn-answer" id="showAnswerBtn">Show Answer</button>
+      </div>
+
+      <div class="navigation">
+        <button class="btn btn-secondary" id="prevBtn">← Previous</button>
+        <span id="positionText">Card 0 of 0</span>
+        <button class="btn btn-secondary" id="nextBtn">Next →</button>
+      </div>
+
+      <div class="card-actions">
+        <button class="btn btn-edit" id="editBtn">✎ Edit Card</button>
+        <button class="btn btn-delete" id="deleteBtn">Delete Card</button>
+      </div>
+    </section>
+
+    <section class="manage-section">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">BUILD YOUR KNOWLEDGE</p>
+          <h2>Manage Cards</h2>
+        </div>
+      </div>
+
+      <form id="cardForm" class="card-form">
+        <h3 id="formTitle">Create a new flashcard</h3>
+        <label for="questionInput">Question</label>
+        <textarea id="questionInput" placeholder="Enter your question..." required maxlength="500"></textarea>
+        <label for="answerInput">Answer</label>
+        <textarea id="answerInput" placeholder="Enter the answer..." required maxlength="2000"></textarea>
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary" id="saveBtn">Save Flashcard</button>
+          <button type="button" class="btn btn-secondary" id="cancelBtn" hidden>Cancel</button>
+        </div>
+        <p id="formMessage" role="status" aria-live="polite"></p>
+      </form>
+
+      <div id="cardList" class="card-list"></div>
+    </section>
+  </main>
+
+  <footer>
+    <p>Built with HTML, CSS &amp; JavaScript</p>
+    <p>CodeAlpha Web Development Internship</p>
+  </footer>
+</body>
+</html>
